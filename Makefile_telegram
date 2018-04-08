@@ -1,0 +1,20 @@
+SRC	?= $(wildcard *.jpg) $(wildcard *.png)
+DIR	?= telegram
+OUT	?= $(SRC:%=$(DIR)/%.png)
+
+SHELL	:= /bin/bash
+
+.PHONY: all
+all: $(OUT)
+
+.PHONY: clean
+clean:
+	rm -f $(OUT)
+
+$(DIR):
+	mkdir -p $@
+
+.DELETE_ON_ERROR:
+
+$(DIR)/%.png: % | $(DIR)
+	convert "$<" -interpolate nearest -filter point -resize "$$(identify -format '%[fx:floor(max(1,min(521/w,512/h)))]00%' "$<")" -size 512x1 xc:transparent -background transparent -layers merge -resize 512x512 "$@"
