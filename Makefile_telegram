@@ -1,8 +1,9 @@
-SRC	?= $(wildcard *.jpg) $(wildcard *.png)
+SRC	?= $(wildcard *.JPG) $(wildcard *.jpg) $(wildcard *.png)
 DIR	?= telegram
 OUT	?= $(SRC:%=$(DIR)/%.png)
 
-MIN	?= 256
+DIM	?= 512
+ZOOM	?= 6
 
 SHELL	:= /bin/bash
 
@@ -19,4 +20,4 @@ $(DIR):
 .DELETE_ON_ERROR:
 
 $(DIR)/%.png: % | $(DIR)
-	convert "$<" -interpolate nearest -filter point -resize "$$(identify -format '%[fx:max(1,floor(min($(MIN)/w,$(MIN)/h)))]00%' "$<")" -size 512x1 xc:transparent -background transparent -layers merge -resize 512x512 "$@"
+	convert "$<" -interpolate nearest -filter point -resize "$$(identify -format '%[fx:max(1,floor(min($(DIM),$(ZOOM)*max(w,h))/max(w,h)))]00%' "$<")" -size $(DIM)x1 xc:transparent -background transparent -layers merge -resize 512x512 "$@"
