@@ -20,4 +20,4 @@ $(DIR):
 .DELETE_ON_ERROR:
 
 $(DIR)/%.png: % | $(DIR)
-	convert "$<" -interpolate nearest -filter point -resize "$$(identify -format '%[fx:max(1,floor(min($(DIM),$(ZOOM)*max(w,h))/max(w,h)))]00%' "$<")" -size $(DIM)x1 xc:transparent -background transparent -layers merge -resize 512x512 "$@"
+	convert "$<" -interpolate nearest -filter point -resize "$$(identify -format '%[fx:max(1,floor(min($(DIM),$(ZOOM)*max(w,h))/max(w,h)))]00%' "$<")" -size $(DIM)x1 xc:transparent -background transparent -layers merge -resize $(DIM)x$(DIM) "$@"
